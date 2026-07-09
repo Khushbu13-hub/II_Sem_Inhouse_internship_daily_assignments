@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Admission Form</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:  #3dafb8;
+            
+        }
+        .container{
+
+            background: white;
+            width: 450px;
+            margin:50px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgb(49, 239, 210);
+        }
+
+        h2{
+            text-align: center;
+            color: #597c7a;
+        }
+
+        label{
+            font-weight: bold;
+        }
+
+        input, select, textarea{
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .gender{
+            margin-bottom: 15px;
+        }
+
+        .gender input{
+            width: auto;
+        }
+
+        button{
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>College Admission Form</h2>
+
+    <form>
+
+        <label>Full Name</label>
+        <input type="text" placeholder="Enter your name" required>
+
+        <label>Email</label>
+        <input type="email" placeholder="Enter your email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" placeholder="Enter phone number" required>
+
+        <label>Date of Birth</label>
+        <input type="date" required>
+
+        <label>Gender</label>
+        <div class="gender">
+            <input type="radio" name="gender"> Male
+            <input type="radio" name="gender"> Female
+            <input type="radio" name="gender"> Other
+        </div>
+
+        <label>Department</label>
+        <select required>
+            <option value="">Select Department</option>
+            <option>CSE</option>
+            <option>IT</option>
+            <option>ECE</option>
+            <option>Mechanical</option>
+            <option>Civil</option>
+        </select>
+
+        <label>Address</label>
+        <textarea placeholder="Enter your address"></textarea>
+
+        <button type="submit">Apply Now</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
