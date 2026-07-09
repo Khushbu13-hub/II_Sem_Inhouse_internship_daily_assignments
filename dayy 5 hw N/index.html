@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Directory</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container{
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .card{
+            background: white;
+            width: 220px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        .gpa{
+            display: none;
+            margin-top: 10px;
+            color: green;
+            font-weight: bold;
+        }
+
+        h3{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Student Directory</h1>
+
+    <div class="container">
+
+        <div class="card">
+            <h3>Rahul Sharma</h3>
+
+            <label>
+                <input type="checkbox" class="showGPA">
+                Show GPA
+            </label>
+
+            <p class="gpa">GPA: 8.9</p>
+        </div>
+
+        <div class="card">
+            <h3>Priya Verma</h3>
+
+            <label>
+                <input type="checkbox" class="showGPA">
+                Show GPA
+            </label>
+
+            <p class="gpa">GPA: 9.2</p>
+        </div>
+
+        <div class="card">
+            <h3>Aman Gupta</h3>
+
+            <label>
+                <input type="checkbox" class="showGPA">
+                Show GPA
+            </label>
+
+            <p class="gpa">GPA: 8.5</p>
+        </div>
+
+    </div>
+
+    <script>
+        $(".showGPA").change(function(){
+
+            let gpa = $(this).closest(".card").find(".gpa");
+
+            if($(this).is(":checked")){
+                gpa.slideDown();
+            }
+            else{
+                gpa.slideUp();
+            }
+
+        });
+    </script>
+
+</body>
+</html>

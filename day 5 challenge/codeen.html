@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crack It Hackathon | Code. Create. Conquer.</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #060614 0%, #0d0b26 50%, #1a0b36 100%);
+            --royal-purple: #6c25be;
+            --royal-purple-glow: rgba(108, 37, 190, 0.5);
+            --gold: #d4af37;
+            --gold-glow: rgba(212, 175, 55, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas Particle Background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header / Navbar */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(6, 6, 20, 0.7);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            background: rgba(108, 37, 190, 0.15);
+            border: 1px solid var(--royal-purple);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px var(--royal-purple-glow);
+            animation: pulse 2s infinite alternate;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #ffffff 30%, #e5c060 70%, #6c25be 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-tagline {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .countdown-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            min-width: 100px;
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.02);
+        }
+
+        .countdown-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            font-feature-settings: "tnum";
+        }
+
+        .countdown-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--gold);
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        /* Buttons */
+        .btn-premium {
+            background: linear-gradient(135deg, var(--gold) 0%, #b3922e 100%);
+            color: #060614;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--gold-glow);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Global Sections Layout */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        /* About Section */
+        .about-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 3.5rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .about-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Why Participate Section */
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--royal-purple);
+            box-shadow: 0 15px 30px var(--royal-purple-glow);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Schedule Section */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--royal-purple), var(--gold));
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+            width: 50%;
+            padding: 0 2rem;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: left;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid #060614;
+            box-shadow: 0 0 10px var(--gold);
+            z-index: 5;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
+
+        .timeline-content {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .timeline-time {
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Prizes Section */
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            align-items: flex-end;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .prize-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .prize-card.gold-tier {
+            order: 2;
+            padding: 4.5rem 2rem;
+            border-color: var(--gold);
+            box-shadow: 0 0 30px var(--gold-glow);
+            background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        .prize-card.silver-tier { order: 1; }
+        .prize-card.bronze-tier { order: 3; }
+
+        .prize-badge {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .prize-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .prize-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        /* Registration Form Section */
+        .form-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 3.5rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-select option {
+            background: #0d0b26;
+            color: #fff;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px var(--gold-glow);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Floating Labels */
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -0.6rem;
+            left: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--gold);
+            background: #0b0a21;
+            padding: 0 0.4rem;
+        }
+
+        /* Success Message State */
+        .success-message {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            background: rgba(4, 4, 12, 0.9);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-info p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: rgba(255,255,255,0.2);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1.5rem;
+        }
+
+        /* Animations & Keyframes */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px var(--royal-purple-glow); }
+            100% { box-shadow: 0 0 25px rgba(108, 37, 190, 0.8); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 968px) {
+            .hero-title { font-size: 3rem; }
+            .prizes-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .prize-card.gold-tier { order: 1; }
+            .prize-card.silver-tier { order: 2; }
+            .prize-card.bronze-tier { order: 3; }
+            
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; text-align: left !important; padding-left: 3.5rem; padding-right: 0; }
+            .timeline-item:nth-child(even) { left: 0; }
+            .timeline-dot { left: 11px !important; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links { display: none; } /* Simplified for mobile example */
+            .countdown { gap: 0.5rem; }
+            .countdown-item { min-width: 70px; padding: 1rem; }
+            .countdown-time { font-size: 1.6rem; }
+            .form-container { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">CRACK IT</a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#perks">Perks</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+                <li><a href="#prizes">Prizes</a></li>
+                <li><a href="#register">Register</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-badge">Hybrid Edition 2026</div>
+        <h1 class="hero-title">CRACK IT HACKATHON</h1>
+        <p class="hero-tagline">Code. Create. Conquer.</p>
+        
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <div class="countdown-time" id="days">00</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-time" id="hours">00</div>
+                <div class="countdown-label">Hrs</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-time" id="minutes">00</div>
+                <div class="countdown-label">Min</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-time" id="seconds">00</div>
+                <div class="countdown-label">Sec</div>
+            </div>
+        </div>
+
+        <a href="#register" class="btn-premium">Register Now</a>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="section-header">
+            <h2 class="section-title">The Arena</h2>
+        </div>
+        <div class="about-card">
+            <p class="about-text">
+                Crack It Hackathon is a premium 36-hour elite coding challenge uniting the world's most innovative minds. Here, futuristic development converges with luxury tech. Whether processing on-site or coordinating remotely in our hybrid framework, you are tasked to craft breakthroughs that address complex real-world variables. Prepare to transcend traditional optimization patterns.
+            </p>
+        </div>
+    </section>
+
+    <!-- Why Participate -->
+    <section id="perks">
+        <div class="section-header">
+            <h2 class="section-title">Elite Advantages</h2>
+        </div>
+        <div class="grid-5">
+            <div class="feature-card">
+                <i class="fa-solid fa-trophy feature-icon"></i>
+                <h3>Grand Prizes</h3>
+                <p>Compete for standard-setting cash reward tiers and modern hardware bundles.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-briefcase feature-icon"></i>
+                <h3>Fast-Track Careers</h3>
+                <p>Present directly to premium tech enterprise scouts for direct placement tracks.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-users-rays feature-icon"></i>
+                <h3>Global Grid</h3>
+                <p>Synchronize architecture methodologies with international system developers.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-graduation-cap feature-icon"></i>
+                <h3>Official Laurels</h3>
+                <p>Earn cryptographic verification credentials affirming structural expertise.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-bolt feature-icon"></i>
+                <h3>Skill Evolution</h3>
+                <p>Refine execution logic under extreme stress vectors and mentor evaluations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule">
+        <div class="section-header">
+            <h2 class="section-title">Operation Timeline</h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-time">July 10, 2026 - 09:00 AM</div>
+                    <h3>Phase I: The Incubation</h3>
+                    <p>Onsite reception, dynamic framework orientation, opening ceremonies, and formal initialization parameters.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-time">July 10, 2026 - 09:00 PM</div>
+                    <h3>Phase II: Core Development</h3>
+                    <p>Uninterrupted environment compiling. Dedicated architectural guidance from industry engineers during structural checkpoints.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-time">July 11, 2026 - 04:00 PM</div>
+                    <h3>Phase III: The Verification</h3>
+                    <p>Production environment evaluation. Final demonstration execution to executive panels and global delegates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prizes Section -->
+    <section id="prizes">
+        <div class="section-header">
+            <h2 class="section-title">The Treasury</h2>
+        </div>
+        <div class="prizes-grid">
+            <div class="prize-card silver-tier">
+                <div class="prize-badge">🥈</div>
+                <h3 class="prize-title">Vice Champion</h3>
+                <div class="prize-amount">$5,000</div>
+            </div>
+            <div class="prize-card gold-tier">
+                <div class="prize-badge" style="text-shadow: 0 0 20px rgba(212,175,55,0.6);">👑</div>
+                <h3 class="prize-title" style="color: var(--gold);">Grand Champion</h3>
+                <div class="prize-amount" style="color: var(--gold); text-shadow: 0 0 15px var(--gold-glow);">$12,000</div>
+            </div>
+            <div class="prize-card bronze-tier">
+                <div class="prize-badge">🥉</div>
+                <h3 class="prize-title">Third Order</h3>
+                <div class="prize-amount">$2,500</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Form Section -->
+    <section id="register">
+        <div class="section-header">
+            <h2 class="section-title">Secure Entry</h2>
+        </div>
+        <div class="form-container">
+            <form id="hackathonForm" onsubmit="handleRegistration(event)">
+                <div class="form-group">
+                    <input type="text" id="fullname" class="form-input" placeholder=" " required>
+                    <label for="fullname" class="form-label">Full Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder=" " required>
+                    <label for="email" class="form-label">Email Matrix Address</label>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" class="form-input" placeholder=" " required>
+                    <label for="phone" class="form-label">Phone Reference</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="org" class="form-input" placeholder=" " required>
+                    <label for="org" class="form-label">Institution / Guild</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="team" class="form-input" placeholder=" " required>
+                    <label for="team" class="form-label">Consortium / Team Name</label>
+                </div>
+                <div class="form-group">
+                    <select id="skills" class="form-select" required>
+                        <option value="" disabled selected hidden>Primary Discipline Spectrum</option>
+                        <option value="frontend">Architectural Engineering (Frontend)</option>
+                        <option value="backend">Systems Optimization (Backend)</option>
+                        <option value="fullstack">Universal Paradigm (Full-Stack)</option>
+                        <option value="ai">Neural Operations & Web3</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-premium" style="width: 100%; margin-top: 1rem;">Initialize Integration</button>
+            </form>
+
+            <div class="success-message" id="successState">
+                <i class="fa-solid fa-circle-check success-icon"></i>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.8rem; margin-bottom: 1rem;">Access Granted</h3>
+                <p style="color: var(--text-muted);">Your registration configuration has successfully locked into the node. Check your communication vector for decryption details.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <a href="#" class="logo">CRACK IT</a>
+                <p>Code. Create. Conquer.</p>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-github"></i></a>
+                <a href="#"><i class="fa-brands fa-discord"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Crack It Hackathon Hub. Built for the Sovereign Developer.
+        </div>
+    </footer>
+
+    <script>
+        // --- Countdown Timer Logic ---
+        const targetDate = new Date("July 10, 2026 09:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference <= 0) {
+                document.getElementById('countdown').innerHTML = "<h3 style='color: var(--gold); font-family: \"Cinzel\"; letter-spacing: 2px;'>THE CONVERGENCE HAS BEGUN</h3>";
+                clearInterval(timerInterval);
+                return;
+            }
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- Interactive Confetti & Form Submission Simulation ---
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            // Execute premium golden confetti shower
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#d4af37', '#6c25be', '#ffffff']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#d4af37', '#6c25be', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Transition UI fields out, display custom Success components
+            document.getElementById('hackathonForm').style.display = 'none';
+            document.getElementById('successState').style.display = 'block';
+        }
+
+        // --- Lightweight Floating Particle Background System ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.3 - 0.15;
+                this.speedY = Math.random() * 0.3 - 0.15;
+                this.color = Math.random() > 0.5 ? 'rgba(212, 175, 55, 0.3)' : 'rgba(108, 37, 190, 0.3)';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particlesArray = [];
+            const numberOfParticles = Math.floor((canvas.width * canvas.height) / 9000);
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+        // Readjust particle density dynamically on window scaling changes
+        window.addEventListener('resize', initParticles);
+    </script>
+</body>
+</html>
