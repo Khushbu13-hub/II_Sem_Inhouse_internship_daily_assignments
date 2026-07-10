@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fetch API Example</title>
+</head>
+<body>
+  <h2>Classmates</h2>
+  <ul id="list"></ul>
+
+  <script>
+    fetch("classmates.json")
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById("list");
+
+        data.forEach(student => {
+          const li = document.createElement("li");
+          li.textContent = `${student.name} - ${student.grade} - ${student.email}`;
+          list.appendChild(li);
+        });
+      })
+      .catch(error => console.error("Error:", error));
+  </script>
+</body>
+</html>

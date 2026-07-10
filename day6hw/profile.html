@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JSON Profile</title>
+</head>
+<body>
+  <h2>Open the browser console (F12) to see the output.</h2>
+
+  <script>
+   
+    const profile = {
+      fullName: "Your Name",
+      branch: "Computer Science",
+      cgpa: 9.5,
+      skills: ["HTML",  "CSS"],
+      city: "Jaipur"
+    };
+
+    
+    const jsonString = JSON.stringify(profile);
+    console.log("JSON String:", jsonString);
+
+
+    const parsedProfile = JSON.parse(jsonString);
+    console.log("Parsed Object:", parsedProfile);
+
+   
+    console.log(
+      "Round-trip successful:",
+      JSON.stringify(parsedProfile) === jsonString
+    );
+  </script>
+</body>
+</html>
