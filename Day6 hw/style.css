@@ -1,0 +1,76 @@
+body{
+    background:#f5f7fb;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+h1{
+    color:#0d6efd;
+}
+
+.card{
+
+    transition:.3s;
+
+    border:none;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+
+}
+
+.avatar{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    background:#0d6efd;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+.badge{
+    border-radius:20px;
+}
+
+input{
+    border-radius:20px !important;
+}
+
+select{
+    border-radius:20px !important;
+}
+
+@media(max-width:768px){
+
+.card{
+
+margin-bottom:20px;
+
+}
+
+}
